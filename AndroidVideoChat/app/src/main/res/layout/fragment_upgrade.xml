@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:id="@+id/clickableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentPaddingTop="0dp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:background="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+
+                <TextView
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="Premium Upgrade"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="#ECEFF7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:drawableLeft="@drawable/noads"
+
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="5dp"
+                    android:drawablePadding="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="22sp"
+                    android:text="Total ads free"
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider_horizontal"/>
+                <TextView
+                    android:drawableLeft="@drawable/sync"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="22sp"
+                    android:text="Unlimited back up of your apps"
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+
+            <Button
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:id="@+id/cancelButton"
+                android:text="Cancel"
+                android:visibility="visible"
+                android:textStyle="bold"
+                android:layout_marginRight="3dp"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_corner_button_cancel"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"/>
+
+                <Button
+                    android:gravity="center"
+                    android:textAllCaps="false"
+                    android:id="@+id/upgradeButton"
+                    android:text="Upgrade"
+                    android:visibility="visible"
+                    android:layout_marginLeft="3dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/round_corner_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"/>
+        </LinearLayout>
+
+
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+</LinearLayout>

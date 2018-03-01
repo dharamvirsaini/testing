@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.participateme.apps.contactapps.DisplayContactsActivity">
+
+    <RelativeLayout
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#138D75"
+        android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/backimage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/back_arrow"
+                android:layout_marginLeft="-10dp"
+                android:layout_centerVertical="true"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/name_text"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="-3dp"
+                android:layout_toRightOf="@+id/backimage"
+                android:elevation="18dp"
+                android:text="Back"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chats_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="20dp"
+            android:text="My Apps"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleText"
+        android:id="@+id/progress_layout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_container"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sync_text"
+                android:text="Syncing"
+                android:layout_marginLeft="7dp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/sync_text"
+                android:layout_toLeftOf="@+id/progress_value"
+                android:id="@+id/progress"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:max="100"
+                android:progress="0"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_value"
+                android:layout_centerVertical="true"
+                android:textStyle="bold"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="7dp"/>
+
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/update_text"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:text="@string/app_update_text"
+            android:visibility="invisible"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hide_text"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:text="Hide"
+            android:textColor="#2980b9"
+            android:visibility="invisible"
+            />
+
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cardList"
+        android:layout_below="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+
+</RelativeLayout>
