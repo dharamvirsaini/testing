@@ -71,7 +71,7 @@ context.finish();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, R.style.AlertDialogCustom);
 
         alertDialogBuilder.setTitle("Premium Upgrade");
-        alertDialogBuilder.setMessage("Unlock Backup feature and enjoy ad free experience! ");
+        alertDialogBuilder.setMessage("Enjoy ad free experience! ");
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("UPGRADE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

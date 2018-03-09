@@ -97,4 +97,11 @@
     <string name="premium_user">You\'re a premium user !</string>
     <string name="app_id">ca-app-pub-4927131029050901~2680329772</string>
     <string name="app_update_text">Your Apps Are Backed Up Successfully...</string>
+
+    <string-array name="numApps">
+        <item>Show top 5 apps</item>
+        <item>Show top 10 apps</item>
+        <item>Show top 15 apps</item>
+        <item>Show top 20 apps</item>
+    </string-array>
 </resources>

@@ -24,6 +24,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -46,12 +49,33 @@ public class MyProfileActivity extends AppCompatActivity {
     private ArrayList<String> mContactApps;
     private RecyclerView mRecList;
     private ProgressBar mProgressBar;
+    private InterstitialAd mInterstitialAd;
+    private String mIsPremium;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
+
+        mInterstitialAd = new InterstitialAd(this);
+
+        mInterstitialAd.setAdUnitId("ca-app-pub-4927131029050901/1694551164");
+        // mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+            }
+        });
+
+        String isPremium = getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).getString("isPremium", null);
+
+        if(isPremium != null && isPremium.equals("yes")){
+            updatePremium();
+        }
 
         mRecList = (RecyclerView) findViewById(R.id.cardList);
         mRecList.setHasFixedSize(true);
@@ -95,6 +119,10 @@ public class MyProfileActivity extends AppCompatActivity {
         checkBackUpStatus();
 
 
+    }
+
+    public void updatePremium() {
+        mIsPremium = "yes";
     }
 
     public void checkBackUpStatus() {
@@ -273,8 +301,11 @@ Log.d("MyProfileActivity", url);
         protected void onPostExecute(Void s) {
             super.onPostExecute(s);
 
-            ContactAppsAdapter ca = new ContactAppsAdapter(MyProfileActivity.this);
-            mRecList.setAdapter(ca);
+          /*  ContactAppsAdapter ca = new ContactAppsAdapter(MyProfileActivity.this);
+            mRecList.setAdapter(ca);*/
+
+            if(mIsPremium == null || !mIsPremium.equals("yes"))
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
              mProgressDialog.cancel();
         }

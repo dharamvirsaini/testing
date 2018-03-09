@@ -78,6 +78,7 @@ public class DisplayContactsActivity extends AppCompatActivity {
     IabHelper mBillingHelper;
     String mPhone;
     String mIsPremium;
+    private StringBuilder mAllApps;
     private InterstitialAd mInterstitialAd;
 
 
@@ -165,18 +166,33 @@ public class DisplayContactsActivity extends AppCompatActivity {
             }
         });
 
+        ((ImageView) findViewById(R.id.trending)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(DisplayContactsActivity.this, TrendingAppsActivity.class);
+
+                Log.d("all apps ", mAllApps.toString());
+                intent.putExtra("apps", mAllApps.toString());
+                startActivity(intent);
+
+            }
+        });
+
         ((TextView) findViewById(R.id.backup_text)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               mIsPremium = getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).getString("isPremium", null);
+
+
+           /*    mIsPremium = getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).getString("isPremium", null);
 
                 if(mIsPremium == null || !mIsPremium.equals("yes"))
                 Constants.showUpgradeDialog(DisplayContactsActivity.this);
-                else {
-                    Intent intent = new Intent(DisplayContactsActivity.this, MyProfileActivity.class);
+                else {*/
+                   Intent intent = new Intent(DisplayContactsActivity.this, MyProfileActivity.class);
                     startActivity(intent);
-                }
+              //  }
             }
         });
 
@@ -536,6 +552,7 @@ public class DisplayContactsActivity extends AppCompatActivity {
             result = new ArrayList<>();
 
             mDeviceTokens.clear();
+            mContactApps.clear();
             result.clear();
 
             ArrayList<String> imgurls = new ArrayList<>();
@@ -549,6 +566,12 @@ public class DisplayContactsActivity extends AppCompatActivity {
                     ci.phoneNumber = mPhoneList.get(i);
                     ci.name = mNameList.get(i);
                     mDeviceTokens.add(tokens.optString(i));
+
+                    if(mAllApps == null)
+                        mAllApps = new StringBuilder(apps.optString(i));
+                    else
+                        mAllApps = mAllApps.append("-" + apps.optString(i));
+
                     mContactApps.add(apps.optString(i));
 
                     if ((imageUrls.optString(i).equals("noimage")) || imageUrls.optString(i).equals("")) {
@@ -587,6 +610,7 @@ public class DisplayContactsActivity extends AppCompatActivity {
             }
 
             if(result.size() > 0) {
+                ((ImageView)findViewById(R.id.trending)).setVisibility(View.VISIBLE);
                 ((RelativeLayout)findViewById(R.id.no_contacts_layout)).setVisibility(View.GONE);
                 ContactAdapter ca = new ContactAdapter(s, DisplayContactsActivity.this);
                 mRecList.setAdapter(ca);
@@ -595,12 +619,25 @@ public class DisplayContactsActivity extends AppCompatActivity {
                 {
                     Intent msgIntent = new Intent(DisplayContactsActivity.this, NotificationService.class);
                     msgIntent.putStringArrayListExtra("tokens", mDeviceTokens);
+                    msgIntent.putExtra("type", "new apps");
                     msgIntent.putExtra("new apps", getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).getString("new apps", null));
                     startService(msgIntent);
+                    getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).edit().remove("new apps").commit();
+                }
+
+                if(getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).getString("new", "no").equals("yes")) {
+
+                    (getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, Context.MODE_PRIVATE).edit().putString("new", "no")).commit();
+                    Intent msgIntent = new Intent(DisplayContactsActivity.this, NotificationService.class);
+                    msgIntent.putStringArrayListExtra("tokens", mDeviceTokens);
+                    msgIntent.putExtra("type", "new user");
+                    startService(msgIntent);
+
                 }
 
             } else {
                 ((RelativeLayout)findViewById(R.id.no_contacts_layout)).setVisibility(View.VISIBLE);
+                ((ImageView)findViewById(R.id.trending)).setVisibility(View.INVISIBLE);
             }
 
             if(mIsPremium == null || !mIsPremium.equals("yes"))

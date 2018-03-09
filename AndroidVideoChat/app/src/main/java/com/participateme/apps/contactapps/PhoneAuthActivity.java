@@ -553,6 +553,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
                             editor.putString("id", jsonObject.getString("userID"));
 
                             editor.putString("isPremium", jsonObject.getString("isPremium"));
+                            editor.putString("new", jsonObject.getString("isNew"));
 
                             editor.commit();
 

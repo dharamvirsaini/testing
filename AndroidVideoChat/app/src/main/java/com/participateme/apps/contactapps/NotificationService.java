@@ -57,35 +57,40 @@ public class NotificationService extends IntentService {
     // will be called asynchronously by Android
     @Override
     protected void onHandleIntent(Intent intent) {
-        String packageNames = intent.getStringExtra("new apps");
+
+        String type = intent.getStringExtra("type");
         ArrayList<String> tokens = new ArrayList<String>(intent.getStringArrayListExtra("tokens"));
-
-        ArrayList<String> newApps = new ArrayList<String>();
         String notificationText = null;
-        Document jsDoc;
 
-        if(packageNames.contains("-"))
-        newApps = new ArrayList<String>(Arrays.asList(intent.getStringExtra("new apps").split("-")));
-        else
-            newApps.add(packageNames);
+        if(type.equals("new apps")) {
+            String packageNames = intent.getStringExtra("new apps");
+
+
+            ArrayList<String> newApps = new ArrayList<String>();
+
+            Document jsDoc;
+
+            if (packageNames.contains("-"))
+                newApps = new ArrayList<String>(Arrays.asList(intent.getStringExtra("new apps").split("-")));
+            else
+                newApps.add(packageNames);
 
             //send notification for multiple apps
 
-            for(int i = 0; i < newApps.size(); i++) {
+            for (int i = 0; i < newApps.size(); i++) {
                 try {
-                   jsDoc = Jsoup.connect("https://play.google.com/store/apps/details?id=" + newApps.get(i) + "&hl=en").get();
-                   Elements appName = jsDoc.select("div.id-app-title");
+                    jsDoc = Jsoup.connect("https://play.google.com/store/apps/details?id=" + newApps.get(i) + "&hl=en").get();
+                    Elements appName = jsDoc.select("div.id-app-title");
 
-                   if(notificationText == null) {
-                       notificationText = appName.first().ownText();
+                    if (notificationText == null) {
+                        notificationText = appName.first().ownText();
 
-                       if(notificationText.length() > 10) {
-                           notificationText = "Your friend " + getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, MODE_PRIVATE).getString("name", "unknownname") + " has just installed " + notificationText.substring(0, 9) + "...";
-                       }
-else{
-                           notificationText = "Your friend " + getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, MODE_PRIVATE).getString("name", "unknownname") + " has just installed " + notificationText;
-                       }
-                   }
+                        if (notificationText.length() > 10) {
+                            notificationText = "Your friend " + getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, MODE_PRIVATE).getString("name", "unknownname") + " has just installed " + notificationText.substring(0, 9) + "...";
+                        } else {
+                            notificationText = "Your friend " + getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, MODE_PRIVATE).getString("name", "unknownname") + " has just installed " + notificationText;
+                        }
+                    }
 
                 } catch (IOException e) {
                     newApps.remove(i);
@@ -93,10 +98,14 @@ else{
                 }
             }
 
-            if(newApps.size() > 1) {
+            if (newApps.size() > 1) {
                 notificationText = notificationText + " and " + (newApps.size() - 1) + " other applications";
             }
+        }
 
+        else if(type.equals("new user")) {
+            notificationText = "Your friend " + getSharedPreferences(PhoneAuthActivity.MyPREFERENCES, MODE_PRIVATE).getString("name", "unknownname") + " is on App Share now. Checkout their apps";
+        }
 notifyCaller(tokens, notificationText);
 
         }

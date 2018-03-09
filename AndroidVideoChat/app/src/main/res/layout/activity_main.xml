@@ -35,7 +35,7 @@
             android:id="@+id/backup_text"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Back Up"
+            android:text="My Apps"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/textView4"
             android:layout_alignParentRight="true"
@@ -71,6 +71,14 @@
         android:layout_height="match_parent"
         />
 
+    <ImageView
+        android:id="@+id/trending"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_above="@+id/add_contact_below"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/trending"
+        android:layout_margin="10dp"/>
     <ImageView
         android:id="@+id/add_contact_below"
         android:layout_width="48dp"

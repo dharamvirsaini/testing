@@ -1,9 +1,11 @@
 package com.participateme.apps.contactapps;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,32 +25,41 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
-public class ContactAppsActivity extends AppCompatActivity {
+public class TrendingAppsActivity extends AppCompatActivity {
 
-    private static final String TAG = "ContactAppsActivity";
+    private static final String TAG = "TrendingAppsActivity";
 
 
     private ArrayList<String> mAppNames = new ArrayList<>();
     private ArrayList<String> mRatings = new ArrayList<>();
     private ArrayList<String> mNumDownloads = new ArrayList<>();
     private ArrayList<String> mAppIcons = new ArrayList<>();
+    private ArrayList<String> mFriendsNumber = new ArrayList<>();
 
     private MaterialDialog mProgressDialog;
-    private ArrayList<String> mContactApps;
+    private ArrayList<String> mContactApps = new ArrayList<>();
     private RecyclerView mRecList;
     private InterstitialAd mInterstitialAd;
     private ProgressBar mProgressBar;
+    private String mAllApps;
+    private int mTop = 5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_apps_contact);
+        setContentView(R.layout.activity_main_trending_apps_contact);
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
 
         mInterstitialAd = new InterstitialAd(this);
@@ -64,10 +75,21 @@ public class ContactAppsActivity extends AppCompatActivity {
             }
         });
 
-        Intent in = getIntent();
-         mContactApps = new ArrayList<String>(Arrays.asList(in.getStringArrayExtra("apps")));
 
-        String name = in.getStringExtra("name");
+
+        Intent in = getIntent();
+        mAllApps = in.getStringExtra("apps");
+        Log.d("all apps are ", mAllApps);
+
+
+
+
+
+
+
+     //   mContactApps = new ArrayList<String>(Arrays.asList(in.getStringArrayExtra("apps")));
+
+        String name = "Back";
        // String name = "Dharamvir Saini";
 
         if (name.length() > 10) {
@@ -77,7 +99,7 @@ public class ContactAppsActivity extends AppCompatActivity {
 
        // String phone = in.getStringExtra("phone");
 
-        mProgressDialog = new MaterialDialog.Builder(ContactAppsActivity.this)
+        mProgressDialog = new MaterialDialog.Builder(TrendingAppsActivity.this)
                 .cancelable(false)
                 .progress(true, 100)
                 .content("Please wait...")
@@ -94,7 +116,7 @@ public class ContactAppsActivity extends AppCompatActivity {
         ((ImageView)findViewById(R.id.backimage)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContactAppsActivity.this.finish();
+                TrendingAppsActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
             }
         });
@@ -102,15 +124,141 @@ public class ContactAppsActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.name_text)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContactAppsActivity.this.finish();
+                TrendingAppsActivity.this.finish();
                 overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
             }
         });
 
+        ((TextView)findViewById(R.id.filter_text)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertDialog();
+            }
+        });
+
+        getTopApps(mTop);
+
+    }
+
+    private void showAlertDialog() {
+
+        final Integer[] numArray = {5, 10, 15, 20};
+        ArrayList<Integer> tempList = new ArrayList<Integer>(Arrays.asList(numArray));
+
+
+     /*   AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Number")
+                .setItems(R.array.numApps, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        String[] items = getResources().getStringArray(R.array.numApps);
+
+                        if(mTop == numArray[which])
+                            dialog.dismiss();
+                        else {
+                            mAppNames.clear();
+                            mNumDownloads.clear();
+                            mRatings.clear();
+                            mAppIcons.clear();
+                            mContactApps.clear();
+                            mFriendsNumber.clear();
+                            mTop = numArray[which];
+                            getTopApps(mTop);
+
+                            ((TextView)findViewById(R.id.chats_text)).setText("Top " + (Integer.toString(numArray[which]) + " apps"));
+                        }
+
+
+                    }
+                });
+         builder.show();
+*/
+
+        new MaterialDialog.Builder(this)
+                .title("Showing Top " + Integer.toString(mTop) +  " Apps")
+                .items(R.array.numApps)
+                .itemsCallbackSingleChoice(tempList.indexOf(mTop), new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+
+                        String[] items = getResources().getStringArray(R.array.numApps);
+
+                        if(mTop == numArray[which])
+                            dialog.dismiss();
+                        else {
+                            mAppNames.clear();
+                            mNumDownloads.clear();
+                            mRatings.clear();
+                            mAppIcons.clear();
+                            mContactApps.clear();
+                            mFriendsNumber.clear();
+                            mTop = numArray[which];
+                            getTopApps(mTop);
+
+                            ((TextView)findViewById(R.id.chats_text)).setText("Top " + (Integer.toString(numArray[which]) + " Apps"));
+                       dialog.dismiss();
+                        }
+                        /**
+                         * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                         * returning false here won't allow the newly selected radio button to actually be selected.
+                         **/
+                        return true;
+                    }
+                })
+                .show();
+
+
+    }
+
+    private void getTopApps(int mTop) {
+
+        String[] total = mAllApps.split("-");
+        HashMap<String, Integer> mTopAppsMap = new HashMap<>();
+
+        for(int i = 0; i < total.length; i++) {
+
+            if(mTopAppsMap.containsKey(total[i])) {
+                mTopAppsMap.put(total[i], mTopAppsMap.get(total[i]) + 1);
+            }
+                else {
+                    mTopAppsMap.put(total[i], 1);
+                }
+
+        }
+
+        Set<Map.Entry<String, Integer>> set = mTopAppsMap.entrySet();
+        List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(set);
+        Collections.sort( list, new Comparator<Map.Entry<String,Integer>>()
+        {
+            public int compare( Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2 )
+            {
+                return (o2.getValue()).compareTo( o1.getValue() );
+            }
+        } );
+
+      //  int i = 0;
+        for(Map.Entry<String, Integer> entry:list){
+
+            mFriendsNumber.add(Integer.toString(entry.getValue()));
+            mContactApps.add(entry.getKey());
+           // i++;
+
+            //if(i == mTop)
+              //  break;
+            //System.out.println(entry.getKey()+" ==== "+entry.getValue());
+        }
+
         new VersionChecker().execute();
 
-        ContactAppsAdapter ca = new ContactAppsAdapter(ContactAppsActivity.this);
+        TrendingAppsAdapter ca = new TrendingAppsAdapter(TrendingAppsActivity.this);
         mRecList.setAdapter(ca);
+
+
+    }
+
+    public ArrayList<String> getFriendsNumber() {
+        return mFriendsNumber;
     }
 
     private class VersionChecker extends AsyncTask<Void, Void, Void> {
@@ -161,6 +309,8 @@ public class ContactAppsActivity extends AppCompatActivity {
                         }
                     });
 
+
+
                 } catch (Exception e) {
                     mContactApps.remove(i);
                     --i;
@@ -170,7 +320,7 @@ public class ContactAppsActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Constants.showNetworkDialog(ContactAppsActivity.this);
+                                Constants.showNetworkDialog(TrendingAppsActivity.this);
 
                             }
                         });
@@ -178,14 +328,14 @@ public class ContactAppsActivity extends AppCompatActivity {
                     }
                 }
 
-                final int j = i;
+                final int j = mAppNames.size();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if(j == 0)
                             ((RelativeLayout)findViewById(R.id.progress_container)).setVisibility(View.VISIBLE);
 
-                        int progress = (j*100)/mContactApps.size();
+                        int progress = (j*100)/mTop;
                         mProgressBar.setProgress(progress);
 
                         ((TextView)findViewById(R.id.progress_value)).setText(Integer.toString(progress) + "%");
@@ -193,6 +343,10 @@ public class ContactAppsActivity extends AppCompatActivity {
                     }
                 });
 
+                if(mAppIcons.size() == mTop)
+                {
+                    break;
+                }
 
             }
 
@@ -216,8 +370,8 @@ public class ContactAppsActivity extends AppCompatActivity {
                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
 
-          /*  ContactAppsAdapter ca = new ContactAppsAdapter(ContactAppsActivity.this);
-            mRecList.setAdapter(ca);*/
+        //    ContactAppsAdapter ca = new ContactAppsAdapter(TrendingAppsActivity.this);
+          //  mRecList.setAdapter(ca);
 
 
 

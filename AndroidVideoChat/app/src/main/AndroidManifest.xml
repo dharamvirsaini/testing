@@ -59,6 +59,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".TrendingAppsActivity"
+            android:label="@string/title_activity_my_profile"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
         <service android:name="com.participateme.apps.contactapps.NotificationService" >
         </service>
     </application>
